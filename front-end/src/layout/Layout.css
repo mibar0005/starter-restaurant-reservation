@@ -1,4 +1,22 @@
 .side-bar {
-  background-color: #393a44;
+  background-color: #0a1df3;
   min-width: 200px;
+}
+
+.breadcrumb {
+  background-color: transparent;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  font-size: 1.3rem;
+}
+
+body {
+  font-family: "San-s S";
+  background-color:rgb(202, 202, 202);
+  color: rgb(5, 5, 5);
+}
+
+.card {
+  background-color:rgb(202, 167, 9)
 }

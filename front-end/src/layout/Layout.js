@@ -1,8 +1,7 @@
-import React from "react";
-import Menu from "./Menu";
-import Routes from "./Routes";
+import React from 'react'
+import Routes from './Routes'
 
-import "./Layout.css";
+import './Layout.css'
 
 /**
  * Defines the main layout of the application.
@@ -11,19 +10,20 @@ import "./Layout.css";
  *
  * @returns {JSX.Element}
  */
+
 function Layout() {
   return (
-    <div className="container-fluid">
-      <div className="row h-100">
-        <div className="col-md-2 side-bar">
-          <Menu />
-        </div>
-        <div className="col">
-          <Routes />
+    <div className='container-fluid'>
+      <div>
+        <div className='m-0 p-0'>
+          <div className='tableDecor'></div>
+          <div className='routes'>
+            <Routes />
+          </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Layout;
+export default Layout
