@@ -1,6 +1,4 @@
-//Import the axios package 
 import axios from 'axios'
-
 /**
  * Defines the base URL for the API.
  * The default values is overridden by the `API_BASE_URL` environment variable.
@@ -33,20 +31,22 @@ headers.append('Content-Type', 'application/json')
  *  If the response is not in the 200 - 399 range the promise is rejected.
  */
 
-//Create a function to fetch json 
 async function fetchJson(url, options, onCancel) {
   try {
     const response = await fetch(url, options)
+
     if (response.status === 204) {
       return null
     }
-    const answer = await response.json()
-    if (answer.error) {
-      return Promise.reject({ message: answer.error })
+
+    const payload = await response.json()
+    if (payload.error) {
+      return Promise.reject({ message: payload.error })
     }
-    return answer.data
+    return payload.data
   } catch (error) {
-    if (error.name !== "AbortError") {
+    if (error.name !== 'AbortError') {
+      console.error(error.stack)
       throw error
     }
     return Promise.resolve(onCancel)
@@ -59,13 +59,12 @@ async function fetchJson(url, options, onCancel) {
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
 
-
 export async function listReservations(params, signal) {
-  const newUrl = new URL(`${API_BASE_URL}/reservations`)
+  const url = new URL(`${API_BASE_URL}/reservations`)
   Object.entries(params).forEach(([key, value]) =>
-    newUrl.searchParams.append(key, value.toString())
+    url.searchParams.append(key, value.toString())
   )
-  return await fetchJson(newUrl, { headers, signal }, [])
+  return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime)
 }
@@ -75,7 +74,6 @@ export async function listReservations(params, signal) {
  * @returns {Promise<[table]>}
  *  a promise that resolves to a possibly empty array of table saved in the database.
  */
-
 export async function listTables() {
   const { data } = await axios.get(`${API_BASE_URL}/tables`)
   return data.data
@@ -87,9 +85,8 @@ export async function listTables() {
  */
 
 export const findReservation = async (reservationId) => {
-  const response = await axios.get(`${API_BASE_URL}/reservations/${reservationId}`,
-  {
+  const res = await axios.get(`${API_BASE_URL}/reservations/${reservationId}`, {
     data: { reservation_id: reservationId },
   })
-  return response.data.data
+  return res.data.data
 }

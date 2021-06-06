@@ -7,7 +7,6 @@ import React from "react";
  *
  * @returns {JSX.Element}
  */
-
 function NotFound() {
   return (
     <div className="NotFound">

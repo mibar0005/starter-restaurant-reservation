@@ -1,6 +1,5 @@
 import React from 'react'
 import Routes from './Routes'
-
 import './Layout.css'
 
 /**
@@ -10,7 +9,6 @@ import './Layout.css'
  *
  * @returns {JSX.Element}
  */
-
 function Layout() {
   return (
     <div className='container-fluid'>

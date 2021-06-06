@@ -1,19 +1,26 @@
 const knex = require("../db/connection")
 
-const create = (newTable) => 
+//Create function for tables and return all tables 
+const create = (newTable) =>
   knex("tables")
     .insert(newTable)
     .returning("*")
 
+//Function for reading tables 
 const read = (tableId) =>
   knex("tables")
     .select("*")
-    .where({ table_id: tableId }).
-    first()
+    .where({ table_id: tableId })
+    .first()
 
-const list = () => 
-knex("tables")
-  .select("*")
-  .orderBy("table_name")
+//Function for list
+const list = () =>
+  knex("tables")
+    .select("*")
+    .orderBy("table_name")
 
-module.exports = { create, read, list }
+module.exports = {
+  create,
+  read,
+  list,
+}

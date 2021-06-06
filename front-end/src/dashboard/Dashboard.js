@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import DashButtons from './DashButtons'
-import ErrorAlert from '../layout/ErrorAlert'
-import { listReservations, listTables } from '../utils/api'
-import ReservationList from '../reservations/ReservationList'
-import TableList from '../tables/TableList'
+import React, { useEffect, useState } from "react";
+import DashButtons from "./DashButtons";
+import ErrorAlert from "../layout/ErrorAlert";
+import { listReservations, listTables } from "../utils/api";
+import ReservationList from "../reservations/ReservationList";
+import TableList from "../tables/TableList";
 
 /**
  * Defines the dashboard page.
@@ -11,6 +11,8 @@ import TableList from '../tables/TableList'
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
+
+//Create Dashboard function
 function Dashboard({ date, setDate }) {
   const [reservations, setReservations] = useState([])
   const [reservationsError, setReservationsError] = useState(null)
@@ -19,6 +21,7 @@ function Dashboard({ date, setDate }) {
 
   useEffect(loadDashboard, [date])
 
+  //Create a function to load the dashboard
   function loadDashboard() {
     const abortController = new AbortController()
     setReservationsError(null)

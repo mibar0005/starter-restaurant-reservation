@@ -2,13 +2,15 @@ const service = require("./seat.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
 
 //Middleware Function
+
+//Function to check if a seat exists
 async function seatExists(req, res, next) {
   if (!req.body.data)
     return next({
       status: 400,
       message: "Data is missing!",
     })
-
+  
   const reservationId = req.body.data.reservation_id
   const table = res.locals.table
   const { table_id, capacity } = table
@@ -28,6 +30,8 @@ async function seatExists(req, res, next) {
     })
   }
 
+  //Assign a reservation_id
+  //Check if the reservation is valid
   reservation_id = reservationId
   let reservation = await service.read(reservationId)
 
@@ -48,9 +52,7 @@ async function seatExists(req, res, next) {
   next()
 }
 
-//Update and Delete seat function
-
-//Update Function
+//Update Function 
 async function update(req, res, next) {
   try {
     const { table } = res.locals
@@ -72,7 +74,7 @@ async function update(req, res, next) {
   }
 }
 
-//Delete Function
+//Delete Function 
 async function finish(_, res, next) {
   const table = res.locals.table
   let { reservation_id } = table

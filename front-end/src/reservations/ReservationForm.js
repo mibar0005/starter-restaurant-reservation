@@ -1,89 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { API_BASE_URL as url, findReservation } from '../utils/api'
-import { useHistory, useParams } from 'react-router'
-import axios from 'axios'
-import ErrorAlert from '../layout/ErrorAlert'
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import { API_BASE_URL as url, findReservation } from "../utils/api"
+import { useHistory, useParams } from "react-router"
+import ErrorAlert from "../layout/ErrorAlert"
 
+//Create a reservation funciton form
+//This should take in the prop setDate
 const ReservationForm = ({ setDate }) => {
-  const hist = useHistory();
-  const { reservation_id } = useParams();
-  const [newReservation, setNewReservation] = useState({
+  const history = useHistory()
+  const { reservation_id } = useParams()
+  const [reservation, setReservation] = useState({
     first_name: "",
     last_name: "",
+    mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    mobile_number: "",
     people: "",
   })
-  const [resErr, setResErr] = useState(null)
+  const [reservationsError, setReservationsError] = useState(null)
 
   useEffect(() => {
     const abortController = new AbortController()
-    reservation_id && findReservation(reservation_id).then(setNewReservation)
+    reservation_id && findReservation(reservation_id).then(setReservation)
     return () => abortController.abort()
-  }, [])
+  }, [reservation_id])
 
-  const { first_name, last_name, mobile_number, reservation_time } = newReservation
-  let { reservation_date, people } = newReservation
-  newReservation.reservation_date = newReservation.reservation_date.slice(0, 10)
+  const { first_name, last_name, mobile_number, reservation_time } = reservation
+  let { reservation_date, people } = reservation
+  reservation.reservation_date = reservation.reservation_date.slice(0, 10)
 
-//Function to add a new reservation 
-  const addNewRes = (newReservation) => {
+  //Create a function to add a reservation
+  const addReservation = (reservation) => {
     axios
-      .post(`${url}/reservations`, { data: newReservation })
+      .post(`${url}/reservations`, { data: reservation })
       .then((res) => {
         res.status === 201 &&
-          hist.push(`/dashboard?date=${newReservation.reservation_date}`)
+          history.push(`/dashboard?date=${reservation.reservation_date}`)
       })
       .catch((err) => {
-        setResErr({ message: err.response.data.error })
+        setReservationsError({ message: err.response.data.error })
       })
   }
 
-  //Function to update the reservation
-  const updateRes = async (newReservation) => {
+  //Create a function to update a reservation
+  const updateReservation = async (reservation) => {
     axios
-      .put(`${url}/reservations/${newReservation.reservation_id}`,
-      {
-        data: newReservation,
+      .put(`${url}/reservations/${reservation.reservation_id}`, {
+        data: reservation,
       })
       .then((res) => {
         res.status === 200 &&
-          hist.push(`/dashboard?date=${newReservation.reservation_date}`)
+          history.push(`/dashboard?date=${reservation.reservation_date}`)
       })
       .catch((err) => {
-        setResErr({ message: err.response.data.error })
+        setReservationsError({ message: err.response.data.error })
       })
   }
 
-  const onChange = (event) => setNewReservation({ ...newReservation, [event.target.name]: event.target.value });
+  const onChange = (event) =>
+    setReservation({ ...reservation, [event.target.name]: event.target.value })
 
   const onSubmit = (event) => {
     event.preventDefault()
-    setResErr(null)
-    newReservation.people = Number(newReservation.people)
+    setReservationsError(null)
+    reservation.people = Number(reservation.people)
 
     if (!reservation_id) {
-      addNewRes(newReservation)
+      addReservation(reservation)
     } else {
-      updateRes(newReservation)
+      updateReservation(reservation)
     }
-    setDate(newReservation.reservation_date)
+    setDate(reservation.reservation_date)
   }
 
   return (
     <div className='row justify-content-center'>
       <form className='col-lg-10' onSubmit={onSubmit}>
-        <h1 className='text-center py-4'>{newReservation.reservation_id ? 'Edit' : 'New'} Reservation</h1>
+        <h1 className='text-center py-4'>
+          {reservation.reservation_id ? 'Edit' : 'New'} Reservation
+        </h1>
 
-        <ErrorAlert error={resErr} />
+        <ErrorAlert error={reservationsError} />
         <div className='form-group'>
           <label htmlFor='first_name'>First Name</label>
           <input
             className='form-control'
             type='text'
             name='first_name'
-            placeholder='First name'
+            placeholder='Enter your first name'
             value={first_name}
             onChange={onChange}
             required
@@ -96,7 +100,7 @@ const ReservationForm = ({ setDate }) => {
             className='form-control'
             type='text'
             name='last_name'
-            placeholder='Last name'
+            placeholder='Enter your last name'
             value={last_name}
             onChange={onChange}
             required
@@ -149,7 +153,7 @@ const ReservationForm = ({ setDate }) => {
             type='text'
             name='people'
             id='people'
-            placeholder="Party size"
+            placeholder="Please enter your party's size"
             value={people}
             onChange={onChange}
             required
@@ -157,8 +161,16 @@ const ReservationForm = ({ setDate }) => {
         </div>
 
         <div className='buttons mt-2'>
-          <button className='btn btn-dark mr-2' type='submit'>Submit</button>
-          <button onClick={() => hist.goBack()} className='btn btn-secondary'>Cancel</button>
+          <button className='btn btn-dark mr-2' type='submit'>
+            Submit
+          </button>
+
+          <button
+            onClick={() => history.goBack()}
+            className='btn btn-secondary'
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>

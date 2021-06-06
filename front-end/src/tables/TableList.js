@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { API_BASE_URL as url, findReservation } from '../utils/api'
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import { API_BASE_URL as url, findReservation } from "../utils/api"
 
+//Create table list function
 const TableList = ({ table, loadDashboard }) => {
-  const [newReservation, setNewReservation] = useState([])
+  const [reservation, setReservation] = useState([])
   const { table_id, table_name, capacity, reservation_id } = table
 
+  //Use the React hook useEffect
   useEffect(() => {
     const abortController = new AbortController()
-    reservation_id && findReservation(reservation_id).then(setNewReservation)
+    reservation_id && findReservation(reservation_id).then(setReservation)
     return () => abortController.abort()
   }, [table, reservation_id])
 
@@ -22,6 +24,7 @@ const TableList = ({ table, loadDashboard }) => {
     badgeName = "occupied"
   }
 
+  //Create a finish reservation event hand
   const finishReservation = (event) => {
     event.preventDefault()
 
@@ -34,8 +37,8 @@ const TableList = ({ table, loadDashboard }) => {
   }
 
   return (
-    <div className="card text-white  my-2 card-bg">
-      <div className="card-header d-flex align-items-center">
+    <div className='card text-white  my-2 card-bg'>
+      <div className='card-header d-flex align-items-center'>
         <h5 className='my-0'>{table_name}</h5>
         <div className='my-0 ml-auto ' data-table-id-status={table_id}>
           Status:{' '}
@@ -47,7 +50,7 @@ const TableList = ({ table, loadDashboard }) => {
       <div className='card-body d-flex align-items-center'>
         <h5 className='card-title my-0'>
           {reservation_id
-            ? `Reserved: ${newReservation.last_name}, ${newReservation.first_name} (${newReservation.people})`
+            ? `Reserved: ${reservation.last_name}, ${reservation.first_name} (${reservation.people})`
             : `Capacity: ${capacity}`}
         </h5>
         {reservation_id && (

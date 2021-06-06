@@ -7,10 +7,11 @@
  *     const date = query.get("date")
  */
 
-import { useLocation } from "react-router-dom";
+ import { useLocation } from "react-router-dom";
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-export default useQuery;
+ function useQuery() {
+   return new URLSearchParams(useLocation().search);
+ }
+ 
+ export default useQuery;
+ 
